@@ -1,3 +1,13 @@
+# Getting Started with Assignment 3 Project
+
+
+If npm is not installed, run
+## `brew install npm` (MACOS)
+
+Install project dependencies
+## `npm install`
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
