@@ -9,9 +9,11 @@ import {
   NavLink
 } from 'react-router-dom';
 
+
 import Home from './pages/home';
 import DataPage from './pages/data_page';
 import HistoryPage from './pages/history_page';
+import ErrorPage from './pages/error_page';
 
 function App() {
   return (
@@ -27,6 +29,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/dataGraph" element={<DataPage />} />
           <Route path="/history" element={<HistoryPage />}/>
+           {/* Catch any unrecognised URL */}
+          <Route path="*" element={<ErrorPage />} />
         </Routes>
       </main>
     </BrowserRouter>
