@@ -1,28 +1,35 @@
-import logo from './logo.svg';
+//Jake Shrimpton - This page will act as the front facing page.
+//
+
 import './App.css';
-import React from 'react'
-import {Button, TextField} from '@mui/material'
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  NavLink
+} from 'react-router-dom';
+
+import Home from './pages/home';
+import DataPage from './pages/data_page';
+import HistoryPage from './pages/history_page';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Test 
-        </a>
-        <Button variant='contained'> TEST </Button>
-        <TextField></TextField>
-      </header>
-    </div>
+    <BrowserRouter>
+      <nav className="navbar">
+        <NavLink to="/">Home</NavLink>
+        <NavLink to="/dataGraph">Data Graph</NavLink>
+        <NavLink to="/history">History</NavLink>
+      </nav>
+
+      <main className="App">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/dataGraph" element={<DataPage />} />
+          <Route path="/history" element={<HistoryPage />}/>
+        </Routes>
+      </main>
+    </BrowserRouter>
   );
 }
 

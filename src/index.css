@@ -11,3 +11,32 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/*--------------------CSS for Input Form text--------------------*/
+/* Label */
+.MuiInputLabel-root {
+  color: gray !important;
+}
+/* entry text */
+.MuiOutlinedInput-input {
+  color: white !important;
+}
+/* box outline */
+.MuiOutlinedInput-notchedOutline {
+  border-color: grey !important;
+}
+
+/* Hover outline*/
+.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: white !important;
+}
+
+/* Label turnsblue when focused */
+.MuiInputLabel-root.Mui-focused {
+  color: #1976d2 !important;
+}
+
+/* Focus colour blue */
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #1976d2 !important;
+}
