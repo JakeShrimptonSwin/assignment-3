@@ -78,3 +78,25 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+
+## Threat Model
+
+Who would want to attack our application?
+
+Phishers, who can also use this tool to gauge not only if Humans can misinterpret
+their URL, but also if the AI, trained on millions of different links, both phishing　
+or benign can spot it.
+
+What are phihsers trying to achieve?
+
+If someone opens a phishing URL in their browser, which can often be identical to the
+real thing can lead people to unknowingly spread their private information, such as passwords and more likely, bank details. more sophisticated phishing URL's can take
+your information as soon as you enter their page, not needing the user to enter their
+own details themselves.
+
+What can phishers actually do?
+
+As stated previously, phishers can take other people's information and use it to log into their personal accounts, most likely being sold to other malicious actors, who
+use these accounts to run seperate scams. (Such as the Mr. Beast scam).
