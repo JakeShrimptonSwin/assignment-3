@@ -1,0 +1,162 @@
+[
+  {
+    "feature": "domain_url_ratio",
+    "correlation": 0.335745
+  },
+  {
+    "feature": "domain_hyphen_count",
+    "correlation": 0.289732
+  },
+  {
+    "feature": "http_substring_count",
+    "correlation": 0.277607
+  },
+  {
+    "feature": "domain_length",
+    "correlation": 0.255543
+  },
+  {
+    "feature": "subdomain_count",
+    "correlation": 0.204759
+  },
+  {
+    "feature": "domain_digit_count",
+    "correlation": 0.185186
+  },
+  {
+    "feature": "is_suspicious_tld",
+    "correlation": 0.184714
+  },
+  {
+    "feature": "letter_ratio",
+    "correlation": -0.139203
+  },
+  {
+    "feature": "lowercase_ratio",
+    "correlation": -0.129399
+  },
+  {
+    "feature": "has_www",
+    "correlation": -0.121843
+  },
+  {
+    "feature": "domain_is_ip",
+    "correlation": 0.121187
+  },
+  {
+    "feature": "has_google_drive",
+    "correlation": 0.121049
+  },
+  {
+    "feature": "number_ratio",
+    "correlation": 0.119068
+  },
+  {
+    "feature": "path_depth",
+    "correlation": -0.115611
+  },
+  {
+    "feature": "has_https",
+    "correlation": 0.103723
+  },
+  {
+    "feature": "has_suspicious_keyword",
+    "correlation": 0.100409
+  },
+  {
+    "feature": "has_at_symbol",
+    "correlation": 0.075644
+  },
+  {
+    "feature": "dot_count",
+    "correlation": 0.07303
+  },
+  {
+    "feature": "number_count",
+    "correlation": 0.068479
+  },
+  {
+    "feature": "underscore_count",
+    "correlation": -0.064451
+  },
+  {
+    "feature": "has_port",
+    "correlation": -0.055262
+  },
+  {
+    "feature": "special_ratio",
+    "correlation": 0.054788
+  },
+  {
+    "feature": "suspicious_keyword_count",
+    "correlation": 0.039202
+  },
+  {
+    "feature": "percent_count",
+    "correlation": -0.038883
+  },
+  {
+    "feature": "url_entropy",
+    "correlation": 0.038306
+  },
+  {
+    "feature": "has_extra_double_slash",
+    "correlation": 0.032965
+  },
+  {
+    "feature": "has_one_drive_ext",
+    "correlation": 0.030685
+  },
+  {
+    "feature": "has_base64_string",
+    "correlation": 0.025974
+  },
+  {
+    "feature": "lowercase_count",
+    "correlation": -0.02564
+  },
+  {
+    "feature": "uppercase_count",
+    "correlation": 0.024555
+  },
+  {
+    "feature": "uppercase_ratio",
+    "correlation": 0.023091
+  },
+  {
+    "feature": "longest_domain_word_length",
+    "correlation": 0.020055
+  },
+  {
+    "feature": "special_count",
+    "correlation": -0.019407
+  },
+  {
+    "feature": "has_multiple_https",
+    "correlation": 0.013185
+  },
+  {
+    "feature": "equals_count",
+    "correlation": 0.012608
+  },
+  {
+    "feature": "has_non_ascii_domain",
+    "correlation": 0.011727
+  },
+  {
+    "feature": "letter_count",
+    "correlation": -0.008562
+  },
+  {
+    "feature": "url_length",
+    "correlation": 0.005898
+  },
+  {
+    "feature": "query_param_count",
+    "correlation": 0.005078
+  },
+  {
+    "feature": "slash_count",
+    "correlation": 0.000779
+  }
+]

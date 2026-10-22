@@ -1,0 +1,10 @@
+[
+  {
+    "type": "Benign",
+    "count": 767154
+  },
+  {
+    "type": "Phishing",
+    "count": 334876
+  }
+]
