@@ -11,8 +11,13 @@ function Home() {
 
       {result && (
         <div>
-          <h2>Request Payload</h2>
-          <pre>{JSON.stringify(result, null, 2)}</pre>
+          <h2>Analysis Result</h2>
+          <p>
+            This URL was classified as{' '}
+            <strong>{result.prediction === 'phishing' ? 'PHISHING' : 'BENIGN'}</strong>.
+          </p>
+          <p>Confidence: {(result.confidence * 100).toFixed(1)}%</p>
+          <p>Phishing probability: {(result.phishing_probability * 100).toFixed(1)}%</p>
         </div>
       )}
 

@@ -4,10 +4,9 @@ import { useState } from "react";
 import { Box, Button, TextField } from '@mui/material'
 
 function URLForm({ Result }) {
-    const [inputURL, setInputUrl] = useState();
-    const [error, setError] = useState();
-    const [result, setResult] = useState();
-    const [loading, setLoading] = useState();
+    const [inputURL, setInputUrl] = useState('');
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
     //https://www.geeksforgeeks.org/computer-networks/maximum-length-of-a-url-in-different-browsers/
     const MAX_URL_LENGTH = 2048;
 
@@ -26,7 +25,6 @@ function URLForm({ Result }) {
         const trimmedURL = inputURL.trim();
 
         try {
-            //Normalise URL so that all checks are even, but do not pass this to the model as it may affect the results
             const normalisedURL = /^https?:\/\//i.test(trimmedURL)
                 ? trimmedURL
                 : `https://${trimmedURL}`;
@@ -64,39 +62,37 @@ function URLForm({ Result }) {
 
         //set loading while stuff gets done
         setLoading(true);
-        //set result to null to remove any leftover results
-        setResult(null);
-        //set error to empty string
         setError('');
-        //do something with the backend
+
         try {
-            //this is an example of sending to backend, for now just show what is being sent
-            // const response = await fetch('/api/check-url', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json'
-            //     },
-            //     body: JSON.stringify({
-            //         url: inputURL
-            //     })
-            // });
+            const response = await fetch('http://127.0.0.1:8000/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ url: inputURL.trim() })
+            });
+            const data = await response.json();
 
-            // if (!response.ok) {
-            //     throw new Error('Failed to analyse the URL.');
-            // }
+            if (!response.ok) {
+                const backendError = data.error;
+                const detailMessage = backendError?.details
+                    ?.map((detail) => detail.message)
+                    .join(' ');
+                throw new Error(
+                    detailMessage ||
+                    backendError?.message ||
+                    'The backend could not analyse this URL.'
+                );
+            }
 
-            // const data = await response.json();
-            // // hava data return like { url, result, confidence } - add identified features if possible.
-            // setResult(data);
-            // } catch (err) {
-            //     setError(
-            //         err.message || 'Unable to connect to the backend.'
-            //     );
-            const requestData = {
-                url: inputURL.trim()
-            };
-
-            Result(requestData);
+            Result(data);
+        } catch (requestError) {
+            setError(
+                requestError instanceof TypeError
+                    ? 'Could not connect to the backend. Make sure the API is running at http://127.0.0.1:8000.'
+                    : requestError.message || 'Unable to analyse this URL.'
+            );
         } finally {
             setLoading(false);
         }
