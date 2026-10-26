@@ -11,8 +11,15 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 from starlette.exceptions import HTTPException as StarletteHTTPException
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from slowapi.util import get_remote_address
 
 from model import PhishingModel
+
+
+# ------------------- Rate limiting -------------------
+limiter = Limiter(key_func=get_remote_address)
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("phishing_api")
@@ -109,6 +116,8 @@ app = FastAPI(
     version="1.0.0",
     lifespan=lifespan,
 )
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 
 # Catches anything unexpected (e.g. the model call failing) and returns it in the shared
@@ -186,6 +195,7 @@ def root(request: Request):
                   "message": "The prediction model is not loaded. Run 'python model.py' and restart the server."}}}}},
     },
 )
+@limiter.limit("5/minute")
 def predict(payload: PredictionRequest, request: Request):
     """
     Turns the URL into the 40 features used in training and returns the model's prediction,
