@@ -90,7 +90,7 @@ function URLForm({ Result }) {
         } catch (requestError) {
             setError(
                 requestError instanceof TypeError
-                    ? 'Could not connect to the backend. Make sure the API is running at http://127.0.0.1:8000.'
+                    ? 'Could not connect to the backend.'
                     : requestError.message || 'Unable to analyse this URL.'
             );
         } finally {
