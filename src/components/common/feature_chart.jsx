@@ -40,11 +40,8 @@ export async function drawFeatureCorrelationChart() {
         .style("opacity", 0)
         .style("z-index", 1000);
 
-    // Clear previous chart contents to prevent duplicates
-    svg.selectAll("*").remove();
 
-    svg
-        .attr("viewBox", `0 0 ${width} ${height}`)
+    svg.attr("viewBox", `0 0 ${width} ${height}`)
         .attr("width", "100%")
         .attr("role", "img")
         .attr(
@@ -91,56 +88,56 @@ export async function drawFeatureCorrelationChart() {
         .attr("stroke-dasharray", "4,4");
 
     // Correlation bars with hover interaction
-svg.selectAll(".correlation-bar")
-    .data(chartData)
-    .join("rect")
-    .attr("class", "correlation-bar")
-    .attr("x", d =>
-        d.correlation >= 0 ? x(0) : x(d.correlation)
-    )
-    .attr("y", d => y(d.feature))
-    .attr("width", d =>
-        Math.abs(x(d.correlation) - x(0))
-    )
-    .attr("height", y.bandwidth())
-    .attr("fill", d =>
-        d.correlation >= 0 ? "#d32f2f" : "#1976d2"
-    )
-    .style("cursor", "pointer")
-    .on("mouseover", function (event, d) {
-        // Highlight the hovered bar
-        d3.select(this)
-            .attr("stroke", "#fff")
-            .attr("stroke-width", 1);
-        svg.selectAll(".correlation-label")
-            .filter(label => label.feature === d.feature)
-            .style("fill", "#fff");
+    svg.selectAll(".correlation-bar")
+        .data(chartData)
+        .join("rect")
+        .attr("class", "correlation-bar")
+        .attr("x", d =>
+            d.correlation >= 0 ? x(0) : x(d.correlation)
+        )
+        .attr("y", d => y(d.feature))
+        .attr("width", d =>
+            Math.abs(x(d.correlation) - x(0))
+        )
+        .attr("height", y.bandwidth())
+        .attr("fill", d =>
+            d.correlation >= 0 ? "#d32f2f" : "#1976d2"
+        )
+        .style("cursor", "pointer")
+        .on("mouseover", function (event, d) {
+            // Highlight the hovered bar
+            d3.select(this)
+                .attr("stroke", "#fff")
+                .attr("stroke-width", 1);
+            svg.selectAll(".correlation-label")
+                .filter(label => label.feature === d.feature)
+                .style("fill", "#fff");
 
-        // Display feature details
-        tooltip
-            .style("opacity", 1)
-            .text(
-                `Feature: ${d.feature}\n` +
-                `Correlation: ${d.correlation.toFixed(3)}`
-            );
-    })
-    .on("mousemove", function (event) {
-        // Follow the mouse
-        tooltip
-            .style("left", `${event.pageX + 12}px`)
-            .style("top", `${event.pageY + 12}px`);
-    })
-    .on("mouseout", function (event, d) {
-        // Remove highlight
-        d3.select(this)
-            .attr("stroke", null)
-            .attr("stroke-width", null);
-        svg.selectAll(".correlation-label")
-            .filter(label => label.feature === d.feature)
-            .style("fill", "none");
-        // Hide tooltip
-        tooltip.style("opacity", 0);
-    });
+            // Display feature details
+            tooltip
+                .style("opacity", 1)
+                .text(
+                    `Feature: ${d.feature}\n` +
+                    `Correlation: ${d.correlation.toFixed(3)}`
+                );
+        })
+        .on("mousemove", function (event) {
+            // Follow the mouse
+            tooltip
+                .style("left", `${event.pageX + 12}px`)
+                .style("top", `${event.pageY + 12}px`);
+        })
+        .on("mouseout", function (event, d) {
+            // Remove highlight
+            d3.select(this)
+                .attr("stroke", null)
+                .attr("stroke-width", null);
+            svg.selectAll(".correlation-label")
+                .filter(label => label.feature === d.feature)
+                .style("fill", "none");
+            // Hide tooltip
+            tooltip.style("opacity", 0);
+        });
 
     // Correlation value labels
     svg.selectAll(".correlation-label")
@@ -153,7 +150,7 @@ svg.selectAll(".correlation-bar")
                 : x(d.correlation) - 5
         )
         .attr("y", d =>
-            y(d.feature) + y.bandwidth() -3
+            y(d.feature) + y.bandwidth() - 3
         )
         .attr("text-anchor", d =>
             d.correlation >= 0 ? "start" : "end"

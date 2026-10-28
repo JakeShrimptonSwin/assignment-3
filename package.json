@@ -12,10 +12,15 @@
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^13.5.0",
     "d3": "^7.9.0",
+    "fastapi": "^0.0.8",
+    "joblib": "^10.1.1",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "react-router-dom": "^7.18.4",
     "react-scripts": "5.0.1",
+    "scikit-learn": "^0.1.0",
+    "slowapi": "^1.0.0",
+    "uvicorn": "^0.0.1-security",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
