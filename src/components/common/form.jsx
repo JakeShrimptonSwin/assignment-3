@@ -17,7 +17,7 @@ function URLForm({ Result }) {
             setError('Please enter a URL.')
             return false
         }
-        if (url.trim().length > MAX_URL_LENGTH) {
+        if (inputURL.length > MAX_URL_LENGTH) {
             setError(`URL must be no longer than ${MAX_URL_LENGTH} characters.`);
             return false;
         }
@@ -126,11 +126,7 @@ function URLForm({ Result }) {
                 helperText={error}
                 placeholder="https://example.com"
                 fullWidth
-                slotProps={{
-                    htmlInput: {
-                        maxLength: MAX_URL_LENGTH
-                    }
-                }}
+                
             />
             <Button
                 variant='contained'
