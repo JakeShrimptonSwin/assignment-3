@@ -100,3 +100,23 @@ What can phishers actually do?
 
 As stated previously, phishers can take other people's information and use it to log into their personal accounts, most likely being sold to other malicious actors, who
 use these accounts to run seperate scams. (Such as the Mr. Beast scam).
+
+## Retraining and checking the URL model
+
+From the `backend` folder, retrain and save the model with:
+
+```powershell
+py model.py
+```
+
+The model normalizes host-only URLs by adding a `/` to the root path. This is applied to
+training rows and incoming predictions, so inputs such as `google.com` and
+`google.com/` use the same feature representation.
+
+After training, the script prints a small reference URL smoke test, including benign
+homepage examples and phishing-like examples using the reserved `.example` domain.
+These examples are useful for catching basic regressions, but are not a substitute for
+a representative, independently labeled test set. The existing accuracy, precision,
+recall, F1, and ROC AUC scores are measured on the dataset's 20% test split.
+
+After retraining, restart the API with `py main.py` so it loads the newly saved model.
