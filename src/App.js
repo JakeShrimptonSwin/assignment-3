@@ -1,34 +1,30 @@
 //Jake Shrimpton - This page will act as the front facing page.
-//
-
 import './App.css';
 import {
   BrowserRouter,
   Routes,
   Route,
-  NavLink
 } from 'react-router-dom';
-
 
 import Home from './pages/home';
 import DataPage from './pages/data_page';
 import HistoryPage from './pages/history_page';
 import ErrorPage from './pages/error_page';
+import LoginPage from "./pages/login_page";
+import Navbar from './components/common/navbar';
 
 function App() {
+  
   return (
     <BrowserRouter>
-      <nav className="navbar">
-        <NavLink to="/">Home</NavLink>
-        <NavLink to="/dataGraph">Data Graph</NavLink>
-        <NavLink to="/history">History</NavLink>
-      </nav>
-
+      <Navbar />
       <main className="App">
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/home" element={<Home/>}/>
           <Route path="/dataGraph" element={<DataPage />} />
           <Route path="/history" element={<HistoryPage />}/>
+          <Route path="/login" element={<LoginPage />} />
            {/* Catch any unrecognised URL */}
           <Route path="*" element={<ErrorPage />} />
         </Routes>
