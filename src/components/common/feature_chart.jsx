@@ -101,7 +101,7 @@ export async function drawFeatureCorrelationChart() {
         )
         .attr("height", y.bandwidth())
         .attr("fill", d =>
-            d.correlation >= 0 ? "#d32f2f" : "#1976d2"
+            d.correlation >= 0 ? "#dc2626" : "#1976d2"
         )
         .style("cursor", "pointer")
         .on("mouseover", function (event, d) {

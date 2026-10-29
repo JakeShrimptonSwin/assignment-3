@@ -1,10 +1,15 @@
 .App {
-  text-align: center;
+    text-align: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .App-header {
   background-color: #282c34;
-  min-height: 100vh;
+  min-height: 0;
+  flex: 1;
+  width: 100%; 
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -13,6 +18,7 @@
   box-sizing: border-box;
   font-size: calc(10px + 2vmin);
   color: white;
+  padding-bottom: 30px;
 }
 
 .App-p {
@@ -60,6 +66,39 @@
   border-bottom-color: #1976d2;
 }
 
+html,
+body,
+#root {
+  min-height: 100%;
+  margin: 0;
+      background-color: #282c34;
+
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+
+.App-footer {
+  width: 100%;
+  margin-top: auto;
+  padding: 15px 24px;
+  box-sizing: border-box;
+  text-align: center;
+  background-color: #282c34;
+  color: grey;
+  border-top: 1px solid grey;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.App-footer p {
+  margin: 4px 0;
+}
+
 /* --------------------ErrorLinks -------------------- */
 .error-link {
   color: #1976d2;
@@ -73,4 +112,61 @@
 .error-link:hover {
   background-color: #1976d2;
   color: white;
+}
+
+/* Data page css */
+.data-section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+
+    width: 95%;
+    max-width: 1400px;
+    margin: 20px auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.data-description {
+    flex: 1;
+    min-width: 0;
+    text-align: left;
+}
+
+.data-description h2 {
+    margin-top: 0;
+    margin-bottom: 12px;
+}
+
+.data-description p {
+    line-height: 1.6;
+    margin: 0;
+}
+
+.data-chart {
+    flex: 1.5;
+    min-width: 0;
+}
+
+.data-chart svg {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+}
+
+/* Stack the text and chart on smaller screens */
+@media (max-width: 768px) {
+    .data-section {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+
+    .data-description,
+    .data-chart {
+        width: 100%;
+    }
 }

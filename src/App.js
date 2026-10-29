@@ -12,6 +12,7 @@ import HistoryPage from './pages/history_page';
 import ErrorPage from './pages/error_page';
 import LoginPage from "./pages/login_page";
 import Navbar from './components/common/navbar';
+import Footer from './components/common/footer';
 
 function App() {
   
@@ -29,6 +30,7 @@ function App() {
           <Route path="*" element={<ErrorPage />} />
         </Routes>
       </main>
+      <Footer/>
     </BrowserRouter>
   );
 }

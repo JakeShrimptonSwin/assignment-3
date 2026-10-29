@@ -56,20 +56,15 @@ export async function drawUrlChart() {
 
     // X axis
     svg.append("g")
-        .attr(
-            "transform",
-            `translate(0,${height - margin.bottom})`
-        )
+        .style("font-size", "14px")
+        .attr("transform",`translate(0,${height - margin.bottom})`)
         .call(d3.axisBottom(x));
 
     // Y axis
     svg.append("g")
+        .style("font-size", "14px")
         .attr("transform", `translate(${margin.left},0)`)
-        .call(
-            d3.axisLeft(y).tickFormat(d3.format(","))
-        );
-
-    // Bars
+        .call(d3.axisLeft(y).tickFormat(d3.format(".2s"))); //THis makes it say 100K instead of 100,000
 
     // Bars with hover interaction
     svg.selectAll("rect")
@@ -137,7 +132,7 @@ export async function drawUrlChart() {
         .attr("x", width / 2)
         .attr("y", 22)
         .attr("text-anchor", "middle")
-        .attr("font-size", "16px")
+        .attr("font-size", "20px")
         .attr("font-weight", "bold")
         .style("font-family", "inherit")
         .style("fill", "#fff")

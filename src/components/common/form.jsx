@@ -9,6 +9,8 @@ function URLForm({ Result }) {
     const [loading, setLoading] = useState(false);
     //https://www.geeksforgeeks.org/computer-networks/maximum-length-of-a-url-in-different-browsers/
     const MAX_URL_LENGTH = 2048;
+    //this is to simulate loading
+    const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
     //validate URL logic - does not check if its safe or not just if it is a valid URL
     const validateURL = (url) => {
@@ -23,7 +25,7 @@ function URLForm({ Result }) {
         }
         //remove Whitespace
         const trimmedURL = inputURL.trim();
-
+        
         try {
             const normalisedURL = /^https?:\/\//i.test(trimmedURL)
                 ? trimmedURL
@@ -65,6 +67,8 @@ function URLForm({ Result }) {
         setError('');
 
         try {
+            await delay(2000);
+
             const response = await fetch('http://127.0.0.1:8000/predict', {
                 method: 'POST',
                 headers: {

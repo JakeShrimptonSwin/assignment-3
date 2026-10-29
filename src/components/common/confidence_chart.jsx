@@ -253,6 +253,24 @@ function PhishingChart({ result }) {
                 ref={chartRef}
                 style={{ display: "block" }}
             />
+            <div>
+                <div>
+                    <strong>
+                        Recommendation:
+                    </strong>
+                </div>
+                <strong style={{ color: classification === "PHISHING" ? "#dc2626" : "#1976d2", }}>
+                    {classification === "PHISHING"
+                        ? " Avoid this URL"
+                        : " Use caution"}
+                </strong>
+
+                <p>
+                    {classification === "PHISHING"
+                        ? "This URL has been identified as potentially malicious. It is reccomended to avoid this website."
+                        : "This URL has been classified as legitimate, but caution is advised."}
+                </p>
+            </div>
         </div>
     );
 }
