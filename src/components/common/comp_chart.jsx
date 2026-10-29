@@ -80,7 +80,7 @@ export async function drawUrlChart() {
         .attr("width", x.bandwidth())
         .attr("height", d => y(0) - y(d.count))
         .attr("fill", d =>
-            d.type === "Phishing" ? "#d32f2f" : "#1976d2"
+            d.type === "Phishing" ? "#dc2626" : "#1976d2"
         )
         .style("cursor", "pointer")
         .on("mouseover", function (event, d) {
