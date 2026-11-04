@@ -170,3 +170,63 @@ body,
         width: 100%;
     }
 }
+
+
+/* --------------------History page CSS-------------------- */
+.history-container {
+  width: 95%;
+  max-width: 900px;
+  margin-bottom: 20px;
+  background-color: #282c34;
+  border: 1px solid grey;
+  border-radius: 6px;
+  overflow-x: auto;
+}
+
+/*cells inherit the app's dark look */
+.history-table .MuiTableCell-root {
+  color: white;
+  font-family: inherit;
+  font-size: 0.9rem;
+  text-align: left;
+  border-bottom: 1px solid #444b57;
+}
+
+/*header row is muted like navbar*/
+.history-table .MuiTableCell-head {
+  color: grey;
+  font-weight: 600;
+  border-bottom: 1px solid grey;
+}
+
+/* No double border against the container edge */
+.history-table .MuiTableRow-root:last-child .MuiTableCell-root {
+  border-bottom: none;
+}
+
+/* Row hover uses the accent colour, like the navbar hover */
+.history-row:hover {
+  background-color: rgba(25, 118, 210, 0.12);
+}
+
+.history-date {
+  color: grey;
+  white-space: nowrap;
+}
+
+.history-url {
+  max-width: 350px;
+  word-break: break-all;
+}
+
+/* Delete icon: grey, turns red on hover */
+.history-table .history-delete.MuiIconButton-root {
+  color: grey;
+  transition: color 0.2s ease;
+}
+
+/* delete icon when hovering */
+.history-table .history-delete.MuiIconButton-root:hover {
+  color: #dc2626;
+  background-color: transparent;
+}

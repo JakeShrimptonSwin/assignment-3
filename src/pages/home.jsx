@@ -4,6 +4,7 @@ import { Button } from '@mui/material';
 
 import URLForm from '../components/common/form';
 import PhishingChart from '../components/common/confidence_chart'
+import { addToHistory } from '../utils/history';
 
 function Home() {
  const [result, setResult] = useState(null);
@@ -12,6 +13,7 @@ function Home() {
     const handleResult = (data) => {
         setResult(data);
         setShowForm(false);
+        addToHistory(data); //send data to history page
     };
 
     const handleCheckAnother = () => {
