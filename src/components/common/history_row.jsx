@@ -1,16 +1,13 @@
-//Jake S - History row component
 //Jake Shrimpton - History row component
 import { TableRow, TableCell, IconButton, Chip } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-//colours for results, with an error colour - same as other sources that use phishing or benign
+// Colours for results, same as other places that show phishing or benign
 const PHISHING_COLOR = '#dc2626';
 const BENIGN_COLOR = '#1976d2';
 const UNKNOWN_COLOR = '#6b7280';
 
-
-
-//convert 1 or 0 to phishing and benign
+// Convert 1 or 0 to phishing and benign
 const getVerdict = (result) => {
   // "prediction" is "phishing" | "benign"; fall back to label (1 / 0)
   const raw = result?.prediction ?? result?.label;
@@ -33,14 +30,23 @@ const formatPercent = (value) =>
 function HistoryRow({ entry, onDelete }) {
   const { id, checkedAt, result } = entry;
   const verdict = getVerdict(result);
+  const date = new Date(checkedAt);
 
   return (
     <TableRow className="history-row">
-      <TableCell className="history-date">
-        {new Date(checkedAt).toLocaleString()}
+      <TableCell className="history-date" data-label="Checked">
+        {/* single wrapper so the date and time stack as one block on phones */}
+        <div>
+          <div>{date.toLocaleDateString()}</div>
+          <div className="history-time">{date.toLocaleTimeString()}</div>
+        </div>
       </TableCell>
-      <TableCell className="history-url">{result?.url ?? 'Unknown URL'}</TableCell>
-      <TableCell>
+
+      <TableCell className="history-url" data-label="URL">
+        {result?.url ?? 'Unknown URL'}
+      </TableCell>
+
+      <TableCell data-label="Verdict">
         {verdict && (
           <Chip
             label={verdict.text}
@@ -49,8 +55,10 @@ function HistoryRow({ entry, onDelete }) {
           />
         )}
       </TableCell>
-      <TableCell>{formatPercent(result?.confidence)}</TableCell>
-      <TableCell>
+
+      <TableCell data-label="Confidence">{formatPercent(result?.confidence)}</TableCell>
+
+      <TableCell className="history-actions">
         <IconButton
           aria-label="delete"
           className="history-delete"

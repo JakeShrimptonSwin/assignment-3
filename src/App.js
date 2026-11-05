@@ -13,7 +13,8 @@ import ErrorPage from './pages/error_page';
 import LoginPage from "./pages/login_page";
 import Navbar from './components/common/navbar';
 import Footer from './components/common/footer';
-
+import ProtectedRoute
+ from './components/common/protected_route';
 function App() {
   
   return (
@@ -22,9 +23,9 @@ function App() {
       <main className="App">
         <Routes>
           <Route path="/" element={<LoginPage />} />
-          <Route path="/home" element={<Home/>}/>
-          <Route path="/dataGraph" element={<DataPage />} />
-          <Route path="/history" element={<HistoryPage />}/>
+          <Route path="/home" element={<ProtectedRoute><Home/></ProtectedRoute>}/>
+          <Route path="/dataGraph" element={<ProtectedRoute><DataPage /></ProtectedRoute>} />
+          <Route path="/history" element={<ProtectedRoute><HistoryPage /></ProtectedRoute>}/>
           <Route path="/login" element={<LoginPage />} />
            {/* Catch any unrecognised URL */}
           <Route path="*" element={<ErrorPage />} />

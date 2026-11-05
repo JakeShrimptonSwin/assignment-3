@@ -19,6 +19,8 @@
   font-size: calc(10px + 2vmin);
   color: white;
   padding-bottom: 30px;
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 .App-p {
@@ -36,6 +38,7 @@
   border-bottom: 1px solid grey;
   box-sizing: border-box;
   width: 100%;
+  position: relative;
 }
 
 /* Navigation links */
@@ -65,6 +68,34 @@
   color: #1976d2;
   border-bottom-color: #1976d2;
 }
+
+.navbar-user {
+  position: absolute;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: grey;
+  font-size: 0.9rem;
+}
+
+.navbar-user strong {
+  color: #1976d2;
+  font-weight: 600;
+}
+
+/* On narrow screens drop it into the normal flow so it can't overlap the links */
+@media (max-width: 768px) {
+  .navbar {
+    flex-wrap: wrap;
+  }
+  .navbar-user {
+    position: static;
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 
 html,
 body,
@@ -181,9 +212,17 @@ body,
   border: 1px solid grey;
   border-radius: 6px;
   overflow-x: auto;
+  padding: 16px;
+  box-sizing: border-box;
+  margin: 20px 0;
 }
 
-/*cells inherit the app's dark look */
+.history-table {
+  min-width: 650px;   /* on wide screens, narrower windows scroll sideways */
+  
+}
+
+/* cells inherit the app's dark look */
 .history-table .MuiTableCell-root {
   color: white;
   font-family: inherit;
@@ -192,7 +231,7 @@ body,
   border-bottom: 1px solid #444b57;
 }
 
-/*header row is muted like navbar*/
+/* header row is muted like the navbar */
 .history-table .MuiTableCell-head {
   color: grey;
   font-weight: 600;
@@ -211,10 +250,17 @@ body,
 
 .history-date {
   color: grey;
-  white-space: nowrap;
+  min-width: 100px;
+  line-height: 1.3;
+}
+
+.history-time {
+  font-size: 0.8rem;
+  color: #6b7280;
 }
 
 .history-url {
+  min-width: 250px;
   max-width: 350px;
   word-break: break-all;
 }
@@ -225,8 +271,69 @@ body,
   transition: color 0.2s ease;
 }
 
-/* delete icon when hovering */
 .history-table .history-delete.MuiIconButton-root:hover {
   color: #dc2626;
   background-color: transparent;
+}
+
+/* ---------- Phones: each row becomes a small card ---------- */
+@media (max-width: 600px) {
+  .history-table {
+    min-width: 0;
+
+  }
+
+  .history-table thead {
+    display: none;
+  }
+
+  .history-table,
+  .history-table tbody,
+  .history-table .history-row {
+    display: block;
+    width: 100%;
+  }
+
+  .history-table .history-row {
+    padding: 8px 12px;
+    border-bottom: 1px solid #444b57;
+    box-sizing: border-box;
+  }
+
+  .history-table .history-row:last-child {
+    border-bottom: none;
+  }
+
+  .history-table .MuiTableCell-root {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 6px 0;
+    border-bottom: none;
+    text-align: right;
+  }
+
+  /* label on the left, value on the right */
+  .history-table .MuiTableCell-root::before {
+    content: attr(data-label);
+    flex-shrink: 0;
+    color: grey;
+    font-weight: 600;
+    text-align: left;
+  }
+
+  .history-table .history-date,
+  .history-table .history-url {
+    min-width: 0;
+    max-width: none;
+  }
+
+  .history-table .history-actions {
+    justify-content: flex-end;
+  }
+
+  .history-table .history-actions::before {
+    content: none;
+  }
 }

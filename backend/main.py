@@ -16,7 +16,7 @@ from slowapi.errors import RateLimitExceeded
 from slowapi.util import get_remote_address
 
 from model import PhishingModel
-
+from auth import router as auth_router, init_db   # Now start the login stuff
 
 # ------------------- Rate limiting -------------------
 limiter = Limiter(key_func=get_remote_address)
@@ -95,6 +95,7 @@ def error_response(status_code, error_type, message, details=None, headers=None)
 # --------------------App + model loaded once at startup--------------------
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    init_db() # Start sql database
     app.state.model = None
     try:
         app.state.model = PhishingModel.load()
@@ -140,6 +141,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(auth_router) #enable login
 
 @app.exception_handler(RequestValidationError)
 async def validation_error_handler(request: Request, exc: RequestValidationError):

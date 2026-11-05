@@ -114,7 +114,9 @@ function URLForm({ Result }) {
                 gap: 2,
                 width: '100%',
                 maxWidth: 500,
-                mx: 'auto'
+                mx: 'auto',
+                px: 2,
+                boxSizing: 'border-box' 
             }}
             onSubmit={handleSubmit}
         >

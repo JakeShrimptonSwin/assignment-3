@@ -1,25 +1,62 @@
 //Jake S - Login Form
 import { useState } from "react";
-import { Box, TextField, Button, } from "@mui/material";
+import { Box, TextField, Button, Alert} from "@mui/material";
 import { useNavigate } from "react-router-dom";
+
+import { setToken, setUser } from "../../utils/auth";
+
+const API_URL = "http://localhost:8000";
 
 function LoginForm() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    const handleLogin = (event) => {
+     const handleLogin = async (event) => {
         event.preventDefault();
+        setError("");
+        setLoading(true);
 
-        // Add login authentication here
-        console.log("Login submitted");
-        navigate("/home")
+         try {
+             //JAKE S - IMPORTANT : THIS IS THE INSECURE VS SECURE CHANGE HERE. 
+             const INSECURE_MODE = false;   // true = vulnerable
+
+             const response = await fetch(
+                 `${API_URL}${INSECURE_MODE ? "/login-insecure" : "/login"}`,
+                 {
+                     method: "POST",
+                     headers: { "Content-Type": "application/json" },
+                     body: JSON.stringify({ username, password }),
+                 }
+             );
+
+            if (response.status === 401) {
+                setError("Invalid username or password");
+                return;
+            }
+            if (!response.ok) {
+                setError("Login failed. Please try again.");
+                return;
+            }
+
+             const data = await response.json();
+             setToken(data.token);
+             setUser(data.username);
+             navigate("/home");
+        } catch {
+            setError("Could not reach the server");
+        } finally {
+            setLoading(false);
+        }
     };
 
-    return (
+     return (
         <div>
+            <Box component="form" onSubmit={handleLogin} sx={{px: 2,}}>
+                {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
 
-            <Box component="form" onSubmit={handleLogin}>
                 <TextField
                     label="Username"
                     fullWidth
@@ -31,7 +68,6 @@ function LoginForm() {
 
                 <TextField
                     label="Password"
-                    type="password"
                     fullWidth
                     required
                     margin="normal"
@@ -43,12 +79,14 @@ function LoginForm() {
                     type="submit"
                     variant="contained"
                     fullWidth
+                    disabled={loading}
                     sx={{ mt: 2 }}
                 >
-                    Login
+                    {loading ? "Logging in..." : "Login"}
                 </Button>
             </Box>
-        </div>);
+        </div>
+    );
 }
 
 export default LoginForm;

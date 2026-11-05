@@ -19,10 +19,12 @@ function DataPage() {
     return (
         <div className="App-header">
             <h1>Data Analysis</h1>
-            <p>
-                These visualisations provide an overview of the dataset used
-                to train and evaluate the phishing URL detection models.
-            </p>
+            <section className="data-section">
+                <p>
+                    These visualisations provide an overview of the dataset used
+                    to train and evaluate the phishing URL detection models.
+                </p>
+            </section>
 
             {/* URL distribution chart */}
             <section className="data-section">
@@ -51,8 +53,8 @@ function DataPage() {
                         correlations indicate that higher feature values are
                         associated with phishing URLs, while negative
                         correlations indicate the opposite. Values closer to
-                        zero indicate a weaker linear relationship.
-                        Correlation does not necessarily imply causation.
+                        zero indicate a weaker relationship, and are less likely to be associated with either.
+                        
                     </p>
                 </div>
 
