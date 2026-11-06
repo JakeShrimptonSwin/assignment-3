@@ -64,6 +64,9 @@ class PredictionResponse(BaseModel):
 
 
 class StatusResponse(BaseModel):
+    model_config = ConfigDict(json_schema_extra={"examples": [
+        {"message": "Phishing URL Detection API is running", "model_loaded": True}
+    ]})
     message: str
     model_loaded: bool
 
@@ -117,8 +120,12 @@ app = FastAPI(
     version="1.0.0",
     lifespan=lifespan,
 )
-app.state.limiter = limiter
-app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+async def rate_limit_handler(request: Request, exc: RateLimitExceeded):
+    return error_response(429, "rate_limited", "Too many requests. The limit is 5 per minute.")
+ 
+ 
+app.add_exception_handler(RateLimitExceeded, rate_limit_handler) 
 
 
 # Catches anything unexpected (e.g. the model call failing) and returns it in the shared
@@ -187,6 +194,10 @@ def root(request: Request):
               "content": {"application/json": {"example": {"error": {
                   "status": 422, "type": "validation_error", "message": "The request contains invalid input.",
                   "details": [{"field": "url", "message": "URL must not contain spaces or other whitespace."}]}}}}},
+        429: {"model": ErrorResponse, "description": "Rate limit exceeded (5 requests per minute per IP address).",
+              "content": {"application/json": {"example": {"error": {
+                  "status": 429, "type": "rate_limited",
+                  "message": "Too many requests. The limit is 5 per minute."}}}}},     
         500: {"model": ErrorResponse, "description": "Unexpected server error.",
               "content": {"application/json": {"example": {"error": {
                   "status": 500, "type": "internal_error",
