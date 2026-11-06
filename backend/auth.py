@@ -6,7 +6,7 @@ import os
 import secrets
 import sqlite3  # Need to use SQLite for SQL injection testing
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Body
 from pydantic import BaseModel, Field
 
 #this lets us turn on insecure mode
@@ -56,10 +56,71 @@ def create_user(username: str, password: str):
         conn.close() #always close connection to db after finishing a command
 
 class LoginRequest(BaseModel):
-    username: str = Field(..., min_length=1, max_length=50)
-    password: str = Field(..., min_length=1, max_length=128)
+    username: str = Field(
+        ..., min_length=1, max_length=50,
+        description="Account username (1-50 characters).",
+    )
+    password: str = Field(
+        ..., min_length=1, max_length=128,
+        description="Account password (1-128 characters).",
+    )
+ 
+    model_config = {
+        "json_schema_extra": {
+            "examples": [{"username": "testuser", "password": "TestPassword123!"}]
+        }
+    }
+
+class LoginResponse(BaseModel):
+    token: str = Field(..., description="Session token to send with later requests.")
+    username: str = Field(..., description="The username that was logged in.")
+ 
+    model_config = {
+        "json_schema_extra": {
+            "examples": [{
+                "token": "kZ3x9Qm1vB7yT0pLw2sN8dHfRjUeAcXoG5iVtYb4MqE",
+                "username": "testuser",
+            }]
+        }
+    }
+ 
+ 
+class ErrorResponse(BaseModel):
+    detail: str = Field(..., description="Human-readable error message.")
 
 #Send login request to database
+@router.post(
+    "/login",
+    response_model=LoginResponse,
+    tags=["Auth"],
+    summary="Log in (secure)",
+    description=(
+        "Checks a username and password against the users table and returns a session token.\n\n"
+        "This is the **secure** version: the SQL query uses a `?` placeholder, so user input is "
+        "passed as data and can never change the query (this blocks SQL injection). Passwords are "
+        "stored as salted scrypt hashes and compared in constant time. The same 401 message is "
+        "returned for an unknown username and a wrong password, so attackers can't tell which "
+        "usernames exist."
+    ),
+    responses={
+        401: {
+            "model": ErrorResponse,
+            "description": "Unknown username or wrong password.",
+            "content": {"application/json": {
+                "example": {"detail": "Invalid username or password"}
+            }},
+        },
+        422: {
+            "description": "Validation error: a field is missing, empty or too long.",
+            "content": {"application/json": {
+                "example": {"detail": [
+                    {"loc": ["body", "password"], "msg": "Field required", "type": "missing"}
+                ]}
+            }},
+        },
+    },
+)
+
 @router.post("/login")
 def login(body: LoginRequest):
     conn = get_db()
@@ -108,29 +169,77 @@ def init_insecure_db():
 
 
 class InsecureLoginRequest(BaseModel):
-    username: str
-    password: str
+    username: str = Field(..., description="Account username (no length or character limits).")
+    password: str = Field(..., description="Account password (no length or character limits).")
+ 
 
+class InsecureLoginResponse(BaseModel):
+    message: str = Field(..., description="Status message.")
+    username: str = Field(..., description="The username of the row that matched.")
 
 if ENABLE_INSECURE:
     init_insecure_db()
 
-    @router.post("/login-insecure")
-    def login_insecure(body: InsecureLoginRequest):
-        conn = get_db()
-        try:
-            #Vulnerability: user input is concatenated straight into the SQL string
-            query = (
-                f"SELECT * FROM insecure_users "
-                f"WHERE username = '{body.username}' AND password = '{body.password}'"
-            )
-            try:
-                row = conn.execute(query).fetchone()
-            except sqlite3.Error as e:
-                raise HTTPException(status_code=500, detail=f"SQL error: {e}")
-        finally:
-            conn.close()
+    @router.post(
+            "/login-insecure",
+            response_model=InsecureLoginResponse,
+            tags=["Auth (insecure demo)"],
+            summary="Log in (intentionally vulnerable)",
+            description=(
+                "**For the SQL injection demo only.** Only available when "
+                "`ENABLE_INSECURE_DEMO=1` is set.\n\n"
+                "The username and password are pasted straight into the SQL string with an f-string, "
+                "so crafted input can change the query."
+                "Passwords here are stored in plain text, and SQL errors are returned to the caller."
+            ),
+            responses={
+                401: {
+                    "model": ErrorResponse,
+                    "description": "No row matched the username and password.",
+                    "content": {"application/json": {
+                        "example": {"detail": "Invalid username or password"}
+                    }},
+                },
+                500: {
+                    "model": ErrorResponse,
+                    "description": "The query was malformed (this leaks the database error).",
+                    "content": {"application/json": {
+                        "example": {"detail": "SQL error: unrecognized token: \"'\""}
+                    }},
+                },
+            },
+        )
 
-        if row is None:
-            raise HTTPException(status_code=401, detail="Invalid username or password")
-        return {"message": "Logged in", "username": row["username"]}
+    def login_insecure(
+            body: InsecureLoginRequest = Body(
+                ...,
+                # Needs FastAPI 0.103+. Shows a dropdown of examples in /docs.
+                openapi_examples={
+                    "normal": {
+                        "summary": "Normal login",
+                        "value": {"username": "testuser", "password": "TestPassword123!"},
+                    },
+                    "injection": {
+                        "summary": "SQL injection attempt (bypasses the password check)",
+                        "value": {"username": "testuser' --", "password": "anything"},
+                    },
+                },
+            )
+        ):
+            conn = get_db()
+            try:
+                #Vulnerability: user input is concatenated straight into the SQL string
+                query = (
+                    f"SELECT * FROM insecure_users "
+                    f"WHERE username = '{body.username}' AND password = '{body.password}'"
+                )
+                try:
+                    row = conn.execute(query).fetchone()
+                except sqlite3.Error as e:
+                    raise HTTPException(status_code=500, detail=f"SQL error: {e}")
+            finally:
+                conn.close()
+    
+            if row is None:
+                raise HTTPException(status_code=401, detail="Invalid username or password")
+            return {"message": "Logged in", "username": row["username"]}
