@@ -14,7 +14,7 @@ export async function drawFeatureCorrelationChart() {
     const width = 800;
     const height = 550;
 
-    // Margins
+    // Chart Margins
     const margin = {
         top: 50,
         right: 50,
@@ -23,6 +23,9 @@ export async function drawFeatureCorrelationChart() {
     };
 
     const svg = d3.select("#correlation-chart");
+
+    //Clear old bars so duplicates dont form
+    svg.selectAll("*").remove();
 
     const tooltip = d3.select("body")
         .selectAll(".correlation-chart-tooltip")
@@ -40,7 +43,6 @@ export async function drawFeatureCorrelationChart() {
         .style("opacity", 0)
         .style("z-index", 1000);
 
-
     svg.attr("viewBox", `0 0 ${width} ${height}`)
         .attr("width", "100%")
         .attr("role", "img")
@@ -49,6 +51,27 @@ export async function drawFeatureCorrelationChart() {
             "Top 15 URL features correlated with phishing classification"
         )
         .style("font-family", "inherit");
+
+    // Keep everything inside the chart when zooming
+    const defs = svg.append("defs");
+
+    defs.append("clipPath")
+        .attr("id", "correlation-clip")
+        .append("rect")
+        .attr("x", margin.left)
+        .attr("y", margin.top)
+        .attr("width", width - margin.left - margin.right)
+        .attr("height", height - margin.top - margin.bottom);
+
+    defs.append("clipPath")
+        .attr("id", "correlation-y-clip")
+        .append("rect")
+        .attr("x", 0)
+        .attr("y", margin.top)
+        .attr("width", margin.left + 1)
+        .attr("height", height - margin.top - margin.bottom);
+
+    const plot = svg.append("g").attr("clip-path", "url(#correlation-clip)");
 
     // Horizontal scale for correlation values
     const x = d3.scaleLinear()
@@ -60,26 +83,29 @@ export async function drawFeatureCorrelationChart() {
         .range([margin.left, width - margin.right]);
 
     // Vertical scale for feature names
+    const baseYRange = [margin.top, height - margin.bottom];
     const y = d3.scaleBand()
         .domain(chartData.map(d => d.feature))
-        .range([margin.top, height - margin.bottom])
+        .range(baseYRange)
         .padding(0.25);
 
-    // X axis
-    svg.append("g")
+    // X axis 
+    const xAxis = svg.append("g")
         .attr(
             "transform",
             `translate(0,${height - margin.bottom})`
         )
         .call(d3.axisBottom(x).tickFormat(d3.format(".2f")));
 
-    // Y axis
-    svg.append("g")
+    // Y axis 
+    const yAxis = svg.append("g")
+        .attr("clip-path", "url(#correlation-y-clip)")
+        .append("g")
         .attr("transform", `translate(${margin.left},0)`)
         .call(d3.axisLeft(y));
 
     // Zero reference line
-    svg.append("line")
+    const zeroLine = plot.append("line")
         .attr("x1", x(0))
         .attr("x2", x(0))
         .attr("y1", margin.top)
@@ -88,7 +114,7 @@ export async function drawFeatureCorrelationChart() {
         .attr("stroke-dasharray", "4,4");
 
     // Correlation bars with hover interaction
-    svg.selectAll(".correlation-bar")
+    const bars = plot.selectAll(".correlation-bar")
         .data(chartData)
         .join("rect")
         .attr("class", "correlation-bar")
@@ -140,7 +166,7 @@ export async function drawFeatureCorrelationChart() {
         });
 
     // Correlation value labels
-    svg.selectAll(".correlation-label")
+    const labels = plot.selectAll(".correlation-label")
         .data(chartData)
         .join("text")
         .attr("class", "correlation-label")
@@ -172,7 +198,65 @@ export async function drawFeatureCorrelationChart() {
         .style("fill", "#fff")
         .text("Feature Correlation with Phishing");
 
-    // Apply consistent font styling to axes
+    //Inherit from rest of website
     svg.selectAll("g")
         .style("font-family", "inherit");
+
+    // Zoom stuff
+    const plotExtent = [
+        [margin.left, margin.top],
+        [width - margin.right, height - margin.bottom]
+    ];
+
+    const zoom = d3.zoom()
+        .scaleExtent([1, 20])
+        .extent(plotExtent)
+        .translateExtent(plotExtent)
+        // Uncomment to require Ctrl/Cmd (or pinch) so the page can still scroll:
+        // .filter(e => e.type !== "wheel" || e.ctrlKey)
+        .on("zoom", ({ transform }) => {
+            // Horizontal: rescale the correlation axis
+            const zx = transform.rescaleX(x);
+
+            // Vertical: stretch/shift the band scale's range. 
+            y.range(baseYRange.map(d => transform.applyY(d)));
+
+            xAxis.call(d3.axisBottom(zx).tickFormat(d3.format(".2f")));
+            yAxis.call(d3.axisLeft(y));
+
+            zeroLine
+                .attr("x1", zx(0))
+                .attr("x2", zx(0));
+
+            bars
+                .attr("x", d =>
+                    d.correlation >= 0 ? zx(0) : zx(d.correlation)
+                )
+                .attr("width", d =>
+                    Math.abs(zx(d.correlation) - zx(0))
+                )
+                .attr("y", d => y(d.feature))
+                .attr("height", y.bandwidth());
+
+            labels
+                .attr("x", d =>
+                    d.correlation >= 0
+                        ? zx(d.correlation) + 5
+                        : zx(d.correlation) - 5
+                )
+                .attr("y", d =>
+                    y(d.feature) + y.bandwidth() - 3
+                );
+        });
+
+    // Reset zoom on draw
+    svg.call(zoom).call(zoom.transform, d3.zoomIdentity);
+
+    // Double-click to reset zoom
+    svg.on("dblclick.zoom", null)
+        .on("dblclick", () =>
+            svg.transition()
+                .duration(300)
+                .call(zoom.transform, d3.zoomIdentity)
+        );
 }
