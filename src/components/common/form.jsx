@@ -7,7 +7,7 @@ function URLForm({ Result }) {
     const [inputURL, setInputUrl] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    //https://www.geeksforgeeks.org/computer-networks/maximum-length-of-a-url-in-different-browsers/
+    //This is what i have used to justify the max length of a URL: https://www.geeksforgeeks.org/computer-networks/maximum-length-of-a-url-in-different-browsers/
     const MAX_URL_LENGTH = 2048;
     //this is to simulate loading
     const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
